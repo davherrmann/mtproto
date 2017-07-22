@@ -3,7 +3,8 @@ package main
 import (
 	"fmt"
 	"os"
-	"mtproto"
+
+	"../../mtproto"
 )
 
 func usage() {
@@ -68,7 +69,7 @@ func main() {
 	switch os.Args[1] {
 	case "auth":
 		phonenumber := os.Args[2]
-		err, authSentCode := m.AuthSendCode(phonenumber)
+		authSentCode, err := m.AuthSendCode(phonenumber)
 		if err != nil {
 			fmt.Println(err)
 			os.Exit(2)
@@ -80,7 +81,7 @@ func main() {
 		var code string
 		fmt.Printf("Enter code: ")
 		fmt.Scanf("%s", &code)
-		err, auth := m.AuthSignIn(phonenumber, code, authSentCode.Phone_code_hash)
+		auth, err := m.AuthSignIn(phonenumber, code, authSentCode.Phone_code_hash)
 		if err != nil {
 			fmt.Println(err)
 			os.Exit(2)
@@ -88,7 +89,7 @@ func main() {
 		userSelf := auth.User.(mtproto.TL_user)
 		fmt.Printf("Signed in: Id %d name <%s %s>\n", userSelf.Id, userSelf.First_name, userSelf.Last_name)
 	case "logout":
-		err, logout := m.AuthLogOut()
+		logout, err := m.AuthLogOut()
 		if err != nil {
 			fmt.Println(err)
 			os.Exit(2)
